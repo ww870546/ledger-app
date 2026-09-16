@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>收付款记录系统 v2.9</title>
+<title>收付款记录系统 v2.10</title>
 <script src="https://cdn.staticfile.org/echarts/5.4.3/echarts.min.js"></script>
 <script src="https://cdn.staticfile.org/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
@@ -118,7 +118,7 @@ select option { color: #1a2332; background: #fff; }
 
 <div class="topbar no-print">
   <h1>收付款记录系统</h1>
-  <span class="credit">开发：@Kase&amp;炆燃科技 v2.9</span>
+  <span class="credit">开发：@Kase&amp;炆燃科技 v2.10</span>
 </div>
 
 <div class="tabs no-print">
@@ -612,6 +612,7 @@ function renderChart() {
   const year = document.getElementById('chart-year').value;
   const list = window._curAllList || [];
   const filtered = list.filter(r => {
+    if (curAcct !== 'all' && r.acctId != curAcct) return false;
     if (year && (r.time||'').slice(0,4) !== year) return false;
     return true;
   });
