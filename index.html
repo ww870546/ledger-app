@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>收付款记录系统 v5.6</title>
+<title>收付款记录系统 v5.7</title>
 <script src="https://cdn.staticfile.org/echarts/5.4.3/echarts.min.js"></script>
 <script src="https://cdn.staticfile.org/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
@@ -118,7 +118,7 @@ select option { color: #1a2332; background: #fff; }
 
 <div class="topbar no-print">
   <h1>收付款记录系统</h1>
-  <span class="credit">开发：@Kase&amp;炆燃科技 v5.6</span>
+  <span class="credit">开发：@Kase&amp;炆燃科技 v5.7</span>
 </div>
 
 <div class="tabs no-print">
@@ -199,7 +199,7 @@ select option { color: #1a2332; background: #fff; }
       <div class="fld"><label>付款人</label><input type="text" id="f-qpayer" list="payer-list"></div>
       <div class="fld"><label>收款人</label><input type="text" id="f-qpayee" list="payee-list"></div>
       <div class="fld"><label>收款账户</label><input type="text" id="f-qbank" list="bank-list"></div>
-      <div class="fld"><label>事由/备注</label><input type="text" id="f-qkw"></div>
+      <div class="fld"><label>关键字</label><input type="text" id="f-qkw"></div>
     </div>
     <div class="no-print" style="margin-bottom:10px;display:flex;gap:8px;">
       <button class="mini-btn" onclick="applyFilter()">筛选</button>
@@ -442,7 +442,7 @@ async function loadRecs() {
       <td>${esc(r.payer||'')}</td><td>${esc(r.purpose||'')}</td>
       <td>${esc(r.payee||'')}</td><td>${esc(r.bank||'')}</td>
       <td>${esc(r.note||'')}</td>
-      <td><span class="del no-print" onclick="delRec(${r.id})">✕</span></td>
+      <td><span class="del no-print" onclick="editRec(${r.id})" style="margin-right:6px;">✎</span><span class="del no-print" onclick="delRec(${r.id})">✕</span></td>
     </tr>`;
   }).join('') || '<tr><td colspan="9" style="text-align:center;color:#888;padding:20px;">暂无记录</td></tr>';
 
@@ -461,6 +461,27 @@ function viewImg(src) {
 }
 
 async function saveRec() {
+  if (editId !== null) {
+    const rec = {
+      id: editId,
+      acctId: parseInt(curAcct) || (await getAll('accts'))[0].id,
+      time: document.getElementById('f-time').value.replace('T',' '),
+      type: document.getElementById('f-type').value,
+      amount: parseFloat(document.getElementById('f-amt').value),
+      payer: document.getElementById('f-payer').value,
+      purpose: document.getElementById('f-purpose').value,
+      payee: document.getElementById('f-payee').value,
+      bank: document.getElementById('f-bank').value,
+      note: document.getElementById('f-note').value
+    };
+    await put('recs', rec);
+    editId = null;
+    document.querySelector('#tab-jizhang .card h3').textContent = '记一笔';
+    document.querySelector('#tab-jizhang .btn-pri').textContent = '保存';
+    clearForm();
+    await loadRecs();
+    return;
+  }
   let acctId;
   if (curAcct === 'all') {
     acctId = document.getElementById('f-acct').value;
