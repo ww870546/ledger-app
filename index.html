@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>收付款记录系统 v5.7</title>
+<title>收付款记录系统 v5.8</title>
 <script src="https://cdn.staticfile.org/echarts/5.4.3/echarts.min.js"></script>
 <script src="https://cdn.staticfile.org/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
@@ -118,7 +118,7 @@ select option { color: #1a2332; background: #fff; }
 
 <div class="topbar no-print">
   <h1>收付款记录系统</h1>
-  <span class="credit">开发：@Kase&amp;炆燃科技 v5.7</span>
+  <span class="credit">开发：@Kase&amp;炆燃科技 v5.8</span>
 </div>
 
 <div class="tabs no-print">
@@ -506,6 +506,25 @@ async function saveRec() {
   clearForm();
   await loadRecs();
   document.getElementById('f-amt').focus();
+}
+
+let editId = null;
+function editRec(id) {
+  editId = id;
+  getAll('recs').then(recs => {
+    const r = recs.find(x => x.id === id);
+    if (!r) return;
+    document.getElementById('f-time').value = (r.time||'').replace(' ','T');
+    document.getElementById('f-type').value = r.type;
+    document.getElementById('f-amt').value = r.amount;
+    document.getElementById('f-payer').value = r.payer || '';
+    document.getElementById('f-purpose').value = r.purpose || '';
+    document.getElementById('f-payee').value = r.payee || '';
+    document.getElementById('f-bank').value = r.bank || '';
+    document.getElementById('f-note').value = r.note || '';
+    showTab('jizhang');
+    window.scrollTo(0,0);
+  });
 }
 
 let pendingDelId = null;
