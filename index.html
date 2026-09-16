@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>收付款记录系统 v6.1</title>
+<title>收付款记录系统 v2.9</title>
 <script src="https://cdn.staticfile.org/echarts/5.4.3/echarts.min.js"></script>
 <script src="https://cdn.staticfile.org/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
@@ -118,7 +118,7 @@ select option { color: #1a2332; background: #fff; }
 
 <div class="topbar no-print">
   <h1>收付款记录系统</h1>
-  <span class="credit">开发：@Kase&amp;炆燃科技 v6.1</span>
+  <span class="credit">开发：@Kase&amp;炆燃科技 v2.9</span>
 </div>
 
 <div class="tabs no-print">
@@ -199,7 +199,7 @@ select option { color: #1a2332; background: #fff; }
       <div class="fld"><label>付款人</label><input type="text" id="f-qpayer" list="payer-list"></div>
       <div class="fld"><label>收款人</label><input type="text" id="f-qpayee" list="payee-list"></div>
       <div class="fld"><label>收款账户</label><input type="text" id="f-qbank" list="bank-list"></div>
-      <div class="fld"><label>关键字</label><input type="text" id="f-qkw"></div>
+      <div class="fld"><label>关键字</label><input type="text" id="f-qkw" placeholder="多词用逗号或空格分隔"></div>
     </div>
     <div class="no-print" style="margin-bottom:10px;display:flex;gap:8px;">
       <button class="mini-btn" onclick="applyFilter()">筛选</button>
