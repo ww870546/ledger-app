@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>收付款记录系统 v2.10</title>
+<title>收付款记录系统 v2.12</title>
 <script src="https://cdn.staticfile.org/echarts/5.4.3/echarts.min.js"></script>
 <script src="https://cdn.staticfile.org/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
@@ -118,7 +118,7 @@ select option { color: #1a2332; background: #fff; }
 
 <div class="topbar no-print">
   <h1>收付款记录系统</h1>
-  <span class="credit">开发：@Kase&amp;炆燃科技 v2.10</span>
+  <span class="credit">开发：@Kase&amp;炆燃科技 v2.12</span>
 </div>
 
 <div class="tabs no-print">
@@ -174,7 +174,7 @@ select option { color: #1a2332; background: #fff; }
       <div class="fld"><label>类型</label><select id="f-type"><option value="in">收入</option><option value="out">支出</option></select></div>
       <div class="fld"><label>金额</label><input type="number" id="f-amt" step="0.01" inputmode="decimal" autocomplete="off"></div>
       <div class="fld"><label>付款人</label><input type="text" id="f-payer" list="payer-list" autocomplete="off"><datalist id="payer-list"></datalist></div>
-      <div class="fld"><label>项目/简称</label><input type="text" id="f-purpose" list="purpose-list" autocomplete="off"><datalist id="purpose-list"></datalist></div>
+      <div class="fld"><label>费用说明</label><input type="text" id="f-purpose" list="purpose-list" autocomplete="off"><datalist id="purpose-list"></datalist></div>
       <div class="fld"><label>收款人</label><input type="text" id="f-payee" list="payee-list" autocomplete="off"><datalist id="payee-list"></datalist></div>
       <div class="fld"><label>收款账户</label><input type="text" id="f-bank" list="bank-list" autocomplete="off"><datalist id="bank-list"></datalist></div>
       <div class="fld"><label>备注</label><input type="text" id="f-note" autocomplete="off"></div>
@@ -208,7 +208,7 @@ select option { color: #1a2332; background: #fff; }
     <div class="table-wrap">
       <table>
         <thead><tr>
-          <th>#</th><th>群聊时间</th><th>金额</th><th>付款人</th><th>项目/简称</th>
+          <th>#</th><th>群聊时间</th><th>金额</th><th>付款人</th><th>费用说明</th>
           <th>收款人</th><th>账户</th><th>备注</th><th class="no-print"></th>
         </tr></thead>
         <tbody id="tbody"></tbody>
@@ -277,7 +277,7 @@ select option { color: #1a2332; background: #fff; }
     <div class="fld"><label>类型</label><select id="e-type"><option value="in">收入</option><option value="out">支出</option></select></div>
     <div class="fld"><label>金额</label><input type="number" id="e-amt" step="0.01"></div>
     <div class="fld"><label>付款人</label><input type="text" id="e-payer"></div>
-    <div class="fld"><label>项目/简称</label><input type="text" id="e-purpose"></div>
+    <div class="fld"><label>费用说明</label><input type="text" id="e-purpose"></div>
     <div class="fld"><label>收款人</label><input type="text" id="e-payee"></div>
     <div class="fld"><label>收款账户</label><input type="text" id="e-bank"></div>
     <div class="fld"><label>备注</label><input type="text" id="e-note"></div>
@@ -828,7 +828,7 @@ async function importExcel(input) {
 
 function exportExcel() {
   if (typeof XLSX === 'undefined') { alert('Excel库未加载'); return; }
-  const header = ['序号','群聊时间','类型','金额','付款人','项目/简称','收款人','收款账户','备注'];
+  const header = ['序号','群聊时间','类型','金额','付款人','费用说明','收款人','收款账户','备注'];
   const rows = window._curAllList || [];
   const filtered = rows.filter(r => curAcct === 'all' || r.acctId == curAcct);
   const data = [header];
