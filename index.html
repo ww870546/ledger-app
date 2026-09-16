@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>收付款记录系统 v5.8</title>
+<title>收付款记录系统 v5.9</title>
 <script src="https://cdn.staticfile.org/echarts/5.4.3/echarts.min.js"></script>
 <script src="https://cdn.staticfile.org/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
@@ -118,7 +118,7 @@ select option { color: #1a2332; background: #fff; }
 
 <div class="topbar no-print">
   <h1>收付款记录系统</h1>
-  <span class="credit">开发：@Kase&amp;炆燃科技 v5.8</span>
+  <span class="credit">开发：@Kase&amp;炆燃科技 v5.9</span>
 </div>
 
 <div class="tabs no-print">
@@ -410,7 +410,11 @@ async function loadRecs() {
     if (qpayer && !(r.payer||'').includes(qpayer)) return false;
     if (qpayee && !(r.payee||'').includes(qpayee)) return false;
     if (qbank && !(r.bank||'').includes(qbank)) return false;
-    if (qkw && !((r.purpose||'').toLowerCase().includes(qkw) || (r.note||'').toLowerCase().includes(qkw))) return false;
+    if (qkw) {
+      const kws = qkw.split(/[,，\s]+/).filter(Boolean);
+      const text = ((r.purpose||'') + ' ' + (r.note||'') + ' ' + (r.payer||'') + ' ' + (r.payee||'')).toLowerCase();
+      if (!kws.some(k => text.includes(k))) return false;
+    }
     return true;
   });
   list.sort((a,b) => (b.time||'').localeCompare(a.time||''));
