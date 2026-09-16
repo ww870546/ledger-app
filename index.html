@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>收付款记录系统 v5.3</title>
+<title>收付款记录系统 v5.4</title>
 <script src="https://cdn.staticfile.org/echarts/5.4.3/echarts.min.js"></script>
 <script src="https://cdn.staticfile.org/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
@@ -118,7 +118,7 @@ select option { color: #1a2332; background: #fff; }
 
 <div class="topbar no-print">
   <h1>收付款记录系统</h1>
-  <span class="credit">开发：@Kase&amp;炆燃科技 v5.3</span>
+  <span class="credit">开发：@Kase&amp;炆燃科技 v5.4</span>
 </div>
 
 <div class="tabs no-print">
@@ -795,7 +795,7 @@ function exportExcel() {
 function openSync() {
   
   document.getElementById('sync-key').value = localStorage.getItem('syncKey') || '';
-  document.getElementById('sync-gist').value = localStorage.getItem('syncGist') || '';
+  document.getElementById('sync-gist').value = localStorage.getItem('syncGist') || '27e0338cbf20b1e799dde7f6e95a6d09';
   document.getElementById('sync-status').textContent = '';
   document.getElementById('sync-modal').classList.add('active');
 }
