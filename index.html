@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>收付款记录系统 v6.0</title>
+<title>收付款记录系统 v6.1</title>
 <script src="https://cdn.staticfile.org/echarts/5.4.3/echarts.min.js"></script>
 <script src="https://cdn.staticfile.org/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
@@ -118,7 +118,7 @@ select option { color: #1a2332; background: #fff; }
 
 <div class="topbar no-print">
   <h1>收付款记录系统</h1>
-  <span class="credit">开发：@Kase&amp;炆燃科技 v6.0</span>
+  <span class="credit">开发：@Kase&amp;炆燃科技 v6.1</span>
 </div>
 
 <div class="tabs no-print">
@@ -267,6 +267,22 @@ select option { color: #1a2332; background: #fff; }
     <div id="sync-status" style="font-size:13px;margin:8px 0;"></div>
     <button class="btn btn-pri" onclick="syncUp()">上传到云端</button>
     <button class="btn btn-gh" onclick="syncDown()">从云端下载</button>
+  </div>
+</div>
+
+<div class="modal" id="edit-modal" onclick="if(event.target===this)this.classList.remove('active')">
+  <div class="box" style="min-width:340px;max-width:90vw;">
+    <h3 style="margin-bottom:12px;">编辑记录</h3>
+    <div class="fld"><label>群聊时间</label><input type="datetime-local" id="e-time"></div>
+    <div class="fld"><label>类型</label><select id="e-type"><option value="in">收入</option><option value="out">支出</option></select></div>
+    <div class="fld"><label>金额</label><input type="number" id="e-amt" step="0.01"></div>
+    <div class="fld"><label>付款人</label><input type="text" id="e-payer"></div>
+    <div class="fld"><label>项目/简称</label><input type="text" id="e-purpose"></div>
+    <div class="fld"><label>收款人</label><input type="text" id="e-payee"></div>
+    <div class="fld"><label>收款账户</label><input type="text" id="e-bank"></div>
+    <div class="fld"><label>备注</label><input type="text" id="e-note"></div>
+    <button class="btn btn-pri" onclick="saveEdit()">保存修改</button>
+    <button class="btn btn-gh" onclick="document.getElementById('edit-modal').classList.remove('active')">取消</button>
   </div>
 </div>
 
@@ -465,27 +481,7 @@ function viewImg(src) {
 }
 
 async function saveRec() {
-  if (editId !== null) {
-    const rec = {
-      id: editId,
-      acctId: parseInt(curAcct) || (await getAll('accts'))[0].id,
-      time: document.getElementById('f-time').value.replace('T',' '),
-      type: document.getElementById('f-type').value,
-      amount: parseFloat(document.getElementById('f-amt').value),
-      payer: document.getElementById('f-payer').value,
-      purpose: document.getElementById('f-purpose').value,
-      payee: document.getElementById('f-payee').value,
-      bank: document.getElementById('f-bank').value,
-      note: document.getElementById('f-note').value
-    };
-    await put('recs', rec);
-    editId = null;
-    document.querySelector('#tab-jizhang .card h3').textContent = '记一笔';
-    document.querySelector('#tab-jizhang .btn-pri').textContent = '保存';
-    clearForm();
-    await loadRecs();
-    return;
-  }
+
   let acctId;
   if (curAcct === 'all') {
     acctId = document.getElementById('f-acct').value;
@@ -518,17 +514,35 @@ function editRec(id) {
   getAll('recs').then(recs => {
     const r = recs.find(x => x.id === id);
     if (!r) return;
-    document.getElementById('f-time').value = (r.time||'').replace(' ','T');
-    document.getElementById('f-type').value = r.type;
-    document.getElementById('f-amt').value = r.amount;
-    document.getElementById('f-payer').value = r.payer || '';
-    document.getElementById('f-purpose').value = r.purpose || '';
-    document.getElementById('f-payee').value = r.payee || '';
-    document.getElementById('f-bank').value = r.bank || '';
-    document.getElementById('f-note').value = r.note || '';
-    switchTab('jizhang');
-    window.scrollTo(0,0);
+    document.getElementById('e-time').value = (r.time||'').replace(' ','T');
+    document.getElementById('e-type').value = r.type;
+    document.getElementById('e-amt').value = r.amount;
+    document.getElementById('e-payer').value = r.payer || '';
+    document.getElementById('e-purpose').value = r.purpose || '';
+    document.getElementById('e-payee').value = r.payee || '';
+    document.getElementById('e-bank').value = r.bank || '';
+    document.getElementById('e-note').value = r.note || '';
+    document.getElementById('edit-modal').classList.add('active');
   });
+}
+async function saveEdit() {
+  if (editId === null) return;
+  const rec = {
+    id: editId,
+    acctId: parseInt(curAcct) || (await getAll('accts'))[0].id,
+    time: document.getElementById('e-time').value.replace('T',' '),
+    type: document.getElementById('e-type').value,
+    amount: parseFloat(document.getElementById('e-amt').value),
+    payer: document.getElementById('e-payer').value,
+    purpose: document.getElementById('e-purpose').value,
+    payee: document.getElementById('e-payee').value,
+    bank: document.getElementById('e-bank').value,
+    note: document.getElementById('e-note').value
+  };
+  await put('recs', rec);
+  editId = null;
+  document.getElementById('edit-modal').classList.remove('active');
+  await loadRecs();
 }
 
 let pendingDelId = null;
